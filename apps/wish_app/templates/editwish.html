@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>The Wishing App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row m-3">
+        <div class="col-md">
+          <h1>Hello {{request.session.user_name}}! Let's edit your wish!</h1>
+        </div>
+        <div class="col-md-2">
+          <a href="/logout">Logout</a>
+        </div>
+      </div>
+      <div id="messages">
+        {%if messages%}
+        <ul>
+          {%for message in messages%}
+          <li>{{message}}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      <div class="row m-3">
+        <form action="/edit_wish_to_db/{{wish.id}}" class="form-group" method="POST">
+          {% csrf_token %}
+          <p>I wish for: <input type="text" name="form_edit_title" class="form-control" value="{{wish.wish}}" /></p>
+
+          <p>Description: <textarea name="form_edit_desc" class="form-control" rows="5" cols="5">{{wish.description}}</textarea></p>
+          <p>
+            <input type="submit" class="btn btn-primary" value="submit" />
+          </p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

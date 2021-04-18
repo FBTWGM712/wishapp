@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>The Wishing App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row m-3">
+        <div class="col-md-7">
+          <h2>Hello {{request.session.user_name}}!</h2>
+        </div>
+        <div class="col-md">
+          <a href="/logout">Logout</a>
+          <a class="btn btn-secondary btn-sm" href="/stats">View stats</a>
+          <a class="btn btn-primary btn-sm" href="/wishes/new">Make a wish!</a>
+        </div>
+      </div>
+      <div class="row md-3 border border-1">
+        <h4>Your wish list:</h4>
+        <table class="table table-striped">
+          <thead>
+            <th scope="col">Item</th>
+            <th scope="col">Date added</th>
+            <th scope="col">Actions</th>
+          </thead>
+          {% for wish in wishes %}
+          {% if wish.submitted_by.id == current_user.id %}
+
+          <tr>
+            <td>{{wish.wish}}</td>
+            <td>{{wish.created_at}}</td>
+            <td>
+              <a href="/delete/{{wish.id}}">Remove | </a>
+              {% if wish.submitted_by.id == current_user.id %}
+              <a href="/wishes/edit/{{wish.id}}">Edit | </a>
+              {% endif %}
+              <a href="/granted/add/{{wish.id}}">Granted!</a>
+            </td>
+          </tr>
+
+          
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+      <div class="row md-3 border border-1">
+        <h4>Granted wishes:</h4>
+        <table class="table table-striped">
+          <thead>
+            <th scope="col">Item</th>
+            <th scope="col">Wisher</th>
+            <th scope="col">Date Added</th>
+            <th scope="col">Date Granted</th>
+            <th scope="col">Likes</th>
+            <th scope="col">Actions</th>
+          </thead>
+          {%for gw in all_wish %}
+          <td>{{gw.wish_granted.wish}}</td>
+          <td>{{gw.user_list.name}} {{gw.user_list.last_name}}</td>
+          <td>{{gw.wish_granted.created_at}}</td>
+          <td>{{gw.added_date}}</td>
+          <td>contar likes</td>
+          <td>
+          {% if gw.submitted_by.id == current_user.id %}
+              <a href="/like">Like</a>
+          {% endif %}
+          </td>
+
+        </tr>
+          {%endfor%}
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
